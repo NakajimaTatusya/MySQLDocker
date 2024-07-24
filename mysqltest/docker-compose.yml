@@ -1,0 +1,73 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0.27
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: utest
+      MYSQL_PASSWORD: P@ssw0rd0724
+    volumes:
+      - db_data80:/var/lib/mysql
+    restart: always
+    networks:
+      - mysql-network
+
+  mysql_56:
+    image: mysql:5.6.51
+    ports:
+      - "3305:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: utest
+      MYSQL_PASSWORD: P@ssw0rd0724
+    volumes:
+      - db_data56:/var/lib/mysql
+    restart: always
+    networks:
+      - mysql-network
+
+  cli:
+    image: mysql:8.0.27
+    networks:
+      - mysql-network
+    command: mysql -hmysql -uutest -pP@ssw0rd0724 testdb
+
+#  phpmyadmin:
+#    image: phpmyadmin
+#    depends_on:
+#      - mysql
+#    environment:
+#      - PMA_ARBITRARY=1
+#      - PMA_HOSTS=mysql
+#      - PMA_USER=root
+#      - PMA_PASSWORD=mysql
+#    ports:
+#      - "3001:80"
+
+  mysql-workbench:
+    image: lscr.io/linuxserver/mysql-workbench:latest
+    container_name: mysql-workbench
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ='Asia/Tokyo'
+    volumes:
+      - config:/config
+    ports:
+      - 3000:3000
+      - 3001:3001
+    cap_add:
+      - IPC_LOCK
+    restart: unless-stopped
+
+volumes:
+  db_data56:
+  db_data80:
+
+networks:
+  mysql-network:
+    driver: bridge
