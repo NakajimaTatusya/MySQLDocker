@@ -8,10 +8,24 @@
 
 * http://localhost:3000
 * https://localhost:3001
-* http://127.0.0.1:3000
-* https://127.0.0.1:3001
-* コンテナのMySQLへ接続するも失敗している。どうやって繋げられるのか？
-* MySQL8 CLI から各コンテナのMySQLへ接続できることは確認済み。
+
+### connection settigs
+
+* Dockerインスタンスの名前を確認する
+
+```sh
+$> docker compose ps
+```
+
+| NAME | IMAGE | COMMAND | SERVICE | CREATE | STATUS |
+| --- | --- | --- | --- | --- | --- |
+|mysql-workbench|lscr.io/linuxserver/mysql-workbench:latest|"/init"|mysql-workbench|About a minute ago   Up About a minute|0.0.0.0:3000-3001->3000-3001/tcp, :::3000-3001->3000-3001/tcp|
+|mysqltest-mysql-1|mysql:8.0.27|"docker-entrypoint.s..."|mysql|About a minute ago   Up About a minute|0.0.0.0:3306->3306/tcp, :::3306->3306/tcp, 33060/tcp|
+|mysqltest-mysql_56-1|mysql:5.6.51|"docker-entrypoint.s..."|mysql_56|About a minute ago   Up About a minute|0.0.0.0:3305->3306/tcp, :::3305->3306/tcp|
+
+* NAMEをHOSTに設定する。
+
+![MySQL Workbench connection settings](./img/mysqlworkbench.png)
 
 ## コンテナ起動
 

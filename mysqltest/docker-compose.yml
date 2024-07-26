@@ -6,15 +6,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: testdb
-      MYSQL_USER: utest
+      MYSQL_USER: testuser
       MYSQL_PASSWORD: P@ssw0rd0724
     volumes:
       - ./db_data80:/var/lib/mysql
       - ./db_my80/initialize:/docker-entrypoint-initdb.d
       - ./db_my80/config/my.cnf:/etc/mysql/conf.d/my.cnf
     restart: always
-    networks:
-      - mysql-network
 
   mysql_56:
     image: mysql:5.6.51
@@ -23,30 +21,19 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: testdb
-      MYSQL_USER: utest
+      MYSQL_USER: testuser
       MYSQL_PASSWORD: P@ssw0rd0724
     volumes:
       - ./db_data56:/var/lib/mysql
       - ./db_my56/initialize:/docker-entrypoint-initdb.d
       - ./db_my56/config/my.cnf:/etc/mysql/conf.d/my.cnf
     restart: always
-    networks:
-      - mysql-network
-
-#  phpmyadmin:
-#    image: phpmyadmin
-#    depends_on:
-#      - mysql
-#    environment:
-#      - PMA_ARBITRARY=1
-#      - PMA_HOSTS=mysql
-#      - PMA_USER=root
-#      - PMA_PASSWORD=mysql
-#    ports:
-#      - "3001:80"
 
   mysql-workbench:
     image: lscr.io/linuxserver/mysql-workbench:latest
+    depends_on:
+      - mysql
+      - mysql_56
     container_name: mysql-workbench
     environment:
       - PUID=1000
@@ -65,7 +52,3 @@ volumes:
   db_data56:
   db_data80:
   config:
-
-networks:
-  mysql-network:
-    driver: bridge
