@@ -50,5 +50,7 @@ services:
 
 volumes:
   db_data56:
+  db_my56:
   db_data80:
+  db_my80:
   config:
